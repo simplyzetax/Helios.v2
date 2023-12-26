@@ -9,4 +9,4 @@ jobs:
     - name: Install modules
       run: bun install
     - name: Run ESLint
-      run: eslint . --ext .ts
+      run: bun run lint
