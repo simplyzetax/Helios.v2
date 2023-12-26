@@ -13,12 +13,12 @@ const extractTokenFromHeader = (header: string | undefined): string | undefined 
 };
 
 const isTokenActive = (token: string): boolean => {
-    return !!TokenStore.activeAccessTokens.find((i) => i.token === `eg1~${token}`);
+    return !!TokenStore.activeAccessTokens.some((i) => i.token === `eg1~${token}`);
 };
 
-const isTokenExpired = (decodedToken: any): boolean => {
+const isTokenExpired = (decodedToken: JwtPayload): boolean => {
     const expiryDate = DateUtil.dateAddTime(new Date(decodedToken.creation_date), decodedToken.hours_expire).getTime();
-    return expiryDate <= new Date().getTime();
+    return expiryDate <= Date.now();
 };
 
 const getUserFromToken = async (token: string): Promise<User | undefined> => {
@@ -31,7 +31,7 @@ const getUserFromToken = async (token: string): Promise<User | undefined> => {
         return undefined;
     }
 
-    let user = await UserWrapper.findUserById(decodedToken.subject);
+    const user = await UserWrapper.findUserById(decodedToken.subject);
     return user;
 };
 
@@ -60,5 +60,5 @@ export const getAuthUser = async (c: Context): Promise<User | undefined> => {
         return undefined;
     }
 
-    return getUserFromToken(token);
+    return await getUserFromToken(token);
 };

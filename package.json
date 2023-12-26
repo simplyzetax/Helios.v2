@@ -11,15 +11,19 @@
         "@typescript-eslint/eslint-plugin": "^6.16.0",
         "@typescript-eslint/parser": "^6.16.0",
         "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-import-resolver-typescript": "^3.6.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-prettier": "^5.1.2",
         "prettier": "^3.1.1",
         "typescript": "^5.2.2"
     },
     "peerDependencies": {
-        "typescript": "^5.0.0",
-        "lint": "eslint . --ext .ts"
+        "typescript": "^5.0.0"
     },
     "scripts": {
-        "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+        "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+        "lint": "eslint . --ext .ts"
     },
     "type": "module",
     "dependencies": {
@@ -32,5 +36,18 @@
         "pg": "^8.11.3",
         "uuid": "^9.0.1",
         "zod": "latest"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged",
+            "pre-push": "npm test"
+        }
+    },
+    "lint-staged": {
+        "*.{js,jsx}": [
+            "pretty-quick --staged",
+            "eslint . --ext .ts --fix",
+            "git add"
+        ]
     }
 }

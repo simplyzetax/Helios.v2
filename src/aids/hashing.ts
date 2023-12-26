@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 class Hashing {
-    public static sha256(data: any): string {
+    public static sha256(data: StringOrBuffer): string {
         const hasher = new Bun.CryptoHasher('sha256');
         hasher.update(data);
         hasher.digest();
@@ -9,7 +9,7 @@ class Hashing {
         return hasher.digest('hex');
     }
 
-    public static sha1(data: any): string {
+    public static sha1(data: StringOrBuffer): string {
         const hasher = new Bun.CryptoHasher('sha1');
         hasher.update(data);
         hasher.digest();
@@ -17,7 +17,7 @@ class Hashing {
         return hasher.digest('hex');
     }
 
-    public static md5(data: any): string {
+    public static md5(data: StringOrBuffer): string {
         const hasher = new Bun.CryptoHasher('md5');
         hasher.update(data);
         hasher.digest();

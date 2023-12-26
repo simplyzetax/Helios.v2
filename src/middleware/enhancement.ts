@@ -1,7 +1,5 @@
-import { type MiddlewareHandler } from 'hono';
 import type { ApiError } from '../aids/error';
 import { createMiddleware } from 'hono/factory';
-import Logger from '../aids/logger';
 
 const ResponseEnhancementsMiddleware = () =>
     createMiddleware(async (c, next) => {

@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, integer, uniqueIndex, boolean, jsonb, serial, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, varchar, uniqueIndex, serial, index } from 'drizzle-orm/pg-core';
 
 export const tokens = pgTable(
     'Tokens',

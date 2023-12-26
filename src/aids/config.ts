@@ -52,7 +52,7 @@ export class Config {
         const configFile = ini.parse(await Bun.file(path.join(import.meta.dir, '../../config.ini')).text());
 
         // Flatten the config object
-        const flattenedConfig: any = {
+        const flattenedConfig: unknown = {
             ...configFile.JWT,
             ...configFile.matchmaker,
             ...configFile.database,

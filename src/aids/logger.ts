@@ -51,27 +51,27 @@ class Logger {
         });
 
     // Log methods
-    public static debug = (...args: any[]) => {
+    public static debug = (...args: unknown[]) => {
         if (this.getLogLevel() > LogLevelsMap.DEBUG.level) return;
         console.log(chalk.bgBlue(` DEBUG `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static error = (...args: any[]) => {
+    public static error = (...args: unknown[]) => {
         if (this.getLogLevel() > LogLevelsMap.ERROR.level) return;
         console.log(chalk.bgRed(` ERROR `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static warn = (...args: any[]) => {
+    public static warn = (...args: unknown[]) => {
         if (this.getLogLevel() > LogLevelsMap.WARNING.level) return;
         console.log(chalk.bgYellow(` WARN `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static info = (...args: any[]) => {
+    public static info = (...args: unknown[]) => {
         if (this.getLogLevel() > LogLevelsMap.INFO.level) return;
         console.log(chalk.bgCyan(` INFO `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static startup = (...args: any[]) => {
+    public static startup = (...args: unknown[]) => {
         console.log(...args.map((arg) => chalk.gray(`${arg}`)));
     };
 }

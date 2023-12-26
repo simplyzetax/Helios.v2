@@ -7,19 +7,19 @@ export interface ResponseBody {
     numericErrorCode: number;
     originatingService: string;
     intent: string;
-    validationFailures?: Record<string, Object>;
+    validationFailures?: Record<string, object>;
 }
 
 export class ApiError {
     statusCode: number;
     public response: ResponseBody;
 
-    constructor(code: string, message: string, numeric: number, statusCode: number, ...messageVars: string[]) {
+    constructor(code: string, message: string, numeric: number, statusCode: number, ...messageVariables: string[]) {
         this.statusCode = statusCode;
         this.response = {
             errorCode: code,
             errorMessage: message,
-            messageVars: messageVars.length ? messageVars : undefined,
+            messageVars: messageVariables.length > 0 ? messageVariables : undefined,
             numericErrorCode: numeric,
             originatingService: 'Nexus',
             intent: 'unknown'
@@ -32,16 +32,16 @@ export class ApiError {
     }
 
     variable(variables: string[]): this {
-        const replacables = this.response.errorMessage.match(/{\d}/g)?.map((match) => match.replace(/[{}]/g, ''));
+        const replacables = this.response.errorMessage.match(/{\d}/g)?.map((match) => match.replaceAll(/[{}]/g, ''));
 
         if (!replacables) return this;
 
-        replacables.forEach((placeholderIndex) => {
-            const variable = variables[parseInt(placeholderIndex)];
+        for (const placeholderIndex of replacables) {
+            const variable = variables[Number.parseInt(placeholderIndex)];
             if (variable) {
                 this.response.errorMessage = this.response.errorMessage.replace(`{${placeholderIndex}}`, variable);
             }
-        });
+        }
 
         return this;
     }
@@ -51,8 +51,8 @@ export class ApiError {
         return this;
     }
 
-    with(...messageVars: string[]): this {
-        this.response.messageVars = this.response.messageVars?.concat(messageVars) || messageVars;
+    with(...messageVariables: string[]): this {
+        this.response.messageVars = this.response.messageVars?.concat(messageVariables) || messageVariables;
         return this;
     }
 

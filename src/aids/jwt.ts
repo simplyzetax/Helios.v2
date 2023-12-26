@@ -9,14 +9,14 @@ import { tokens, type NewToken } from '../models/token';
 import DateUtil from './date';
 import UUID from './uuid';
 
-export namespace JwtHelper {
+export class JwtHelper {
     /**
      *
      * @param payload The payload to create the token with
      * @param hoursToExpire The amount of hours the token should be valid for
      * @returns The created token
      */
-    function createToken(payload: any, hoursToExpire: number) {
+    static createToken(payload: JwtPayload, hoursToExpire: number) {
         return jwt.sign(payload, config.JWT_SECRET, { expiresIn: `${hoursToExpire}h` });
     }
 
@@ -28,7 +28,7 @@ export namespace JwtHelper {
      * @param hoursToExpire The amount of hours the token should be valid for
      * @returns A promise that resolves to the client token
      */
-    export async function createClientToken(clientId: string, grantType: string, ipAddress: string, hoursToExpire: number) {
+    static createClientToken(clientId: string, grantType: string, ipAddress: string, hoursToExpire: number) {
         const payload = {
             payloadId: Encoding.encodeBase64(UUID.g()),
             clientService: 'fortnite',
@@ -42,7 +42,7 @@ export namespace JwtHelper {
             hoursExpire: hoursToExpire
         };
 
-        const clientToken = createToken(payload, hoursToExpire);
+        const clientToken = this.createToken(payload, hoursToExpire);
 
         TokenStore.activeClientTokens.push({ ip: ipAddress, token: `eg1~${clientToken}` });
         return clientToken;
@@ -57,7 +57,7 @@ export namespace JwtHelper {
      * @param hoursToExpire The amount of hours the token should be valid for
      * @returns A promise that resolves to the access token
      */
-    export async function createAccessToken(user: User, clientId: string, grantType: string, deviceId: string, hoursToExpire: number) {
+    static async createAccessToken(user: User, clientId: string, grantType: string, deviceId: string, hoursToExpire: number) {
         const payload = {
             app: 'fortnite',
             subject: user.accountId,
@@ -77,7 +77,7 @@ export namespace JwtHelper {
             hoursExpire: hoursToExpire
         };
 
-        const accessToken = createToken(payload, hoursToExpire);
+        const accessToken = this.createToken(payload, hoursToExpire);
         TokenStore.activeAccessTokens.push({ accountId: user.accountId, token: `eg1~${accessToken}` });
 
         const newToken: NewToken = {
@@ -104,7 +104,7 @@ export namespace JwtHelper {
      * @param hoursToExpire The amount of hours the token should be valid for
      * @returns
      */
-    export async function createRefreshToken(user: User, clientId: string, grantType: string, deviceId: string, hoursToExpire: number) {
+    static async createRefreshToken(user: User, clientId: string, grantType: string, deviceId: string, hoursToExpire: number) {
         const payload = {
             subject: user.accountId,
             deviceId,
@@ -116,7 +116,7 @@ export namespace JwtHelper {
             hoursExpire: hoursToExpire
         };
 
-        const refreshToken = createToken(payload, hoursToExpire);
+        const refreshToken = this.createToken(payload, hoursToExpire);
         TokenStore.activeRefreshTokens.push({ accountId: user.accountId, token: `eg1~${refreshToken}` });
 
         const newToken: NewToken = {
@@ -139,7 +139,7 @@ export namespace JwtHelper {
      * @param token The token to check
      * @returns The payload of the token if it is valid
      */
-    export function getValidJwtPayload(token: string | JwtPayload | null): JwtPayload | undefined {
+    static getValidJwtPayload(token: string | JwtPayload | null): JwtPayload | undefined {
         if (typeof token !== 'object' || !token) return undefined;
         console.log(token);
         if (typeof token.creationDate !== 'string' || typeof token.hoursExpire !== 'number') {
@@ -153,7 +153,7 @@ export namespace JwtHelper {
      * @param token The token to check
      * @returns Whether or not the token is expired
      */
-    export function isTokenExpired(token: string): boolean {
+    static isTokenExpired(token: string): boolean {
         const decoded = jwt.decode(token);
         if (!decoded) return false;
 
