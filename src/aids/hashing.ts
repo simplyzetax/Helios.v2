@@ -1,28 +1,28 @@
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 
 class Hashing {
     public static sha256(data: any): string {
-        const hasher = new Bun.CryptoHasher("sha256");
+        const hasher = new Bun.CryptoHasher('sha256');
         hasher.update(data);
         hasher.digest();
 
-        return hasher.digest("hex");
+        return hasher.digest('hex');
     }
 
     public static sha1(data: any): string {
-        const hasher = new Bun.CryptoHasher("sha1");
+        const hasher = new Bun.CryptoHasher('sha1');
         hasher.update(data);
         hasher.digest();
 
-        return hasher.digest("hex");
+        return hasher.digest('hex');
     }
 
     public static md5(data: any): string {
-        const hasher = new Bun.CryptoHasher("md5");
+        const hasher = new Bun.CryptoHasher('md5');
         hasher.update(data);
         hasher.digest();
 
-        return hasher.digest("hex");
+        return hasher.digest('hex');
     }
 
     public static async hashPassword(plaintextPassword: string): Promise<string> {
@@ -34,7 +34,7 @@ class Hashing {
     }
 
     /**
-     * 
+     *
      * @param data The data to encrypt
      * @param password The password to encrypt the data with
      * @returns The encrypted data as a string
@@ -49,7 +49,7 @@ class Hashing {
     }
 
     /**
-     * 
+     *
      * @param data The data to decrypt
      * @param password The password to decrypt the data with
      * @returns The decrypted data as a string

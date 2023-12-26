@@ -1,13 +1,33 @@
-import { eq, sql } from "drizzle-orm";
-import { users, type User } from "../../models/user";
-import { db } from "../..";
+import { eq, sql } from 'drizzle-orm';
+import { users, type User } from '../../models/user';
+import { db } from '../..';
 
 const preparedQueries = {
-    findUserById: db.select().from(users).where(eq(users.accountId, sql.placeholder('accountId'))).prepare("findUserById"),
-    findUserByEmail: db.select().from(users).where(eq(users.email, sql.placeholder('email'))).prepare("findUserByEmail"),
-    findUserByDiscordId: db.select().from(users).where(eq(users.discordId, sql.placeholder('discordId'))).prepare("findUserByDiscordId"),
-    findUserByUsername: db.select().from(users).where(eq(users.username, sql.placeholder('username'))).prepare("findUserByUsername"),
-    findUserByUsernameLower: db.select().from(users).where(eq(users.usernameLower, sql.placeholder('usernameLower'))).prepare("findUserByUsernameLower"),
+    findUserById: db
+        .select()
+        .from(users)
+        .where(eq(users.accountId, sql.placeholder('accountId')))
+        .prepare('findUserById'),
+    findUserByEmail: db
+        .select()
+        .from(users)
+        .where(eq(users.email, sql.placeholder('email')))
+        .prepare('findUserByEmail'),
+    findUserByDiscordId: db
+        .select()
+        .from(users)
+        .where(eq(users.discordId, sql.placeholder('discordId')))
+        .prepare('findUserByDiscordId'),
+    findUserByUsername: db
+        .select()
+        .from(users)
+        .where(eq(users.username, sql.placeholder('username')))
+        .prepare('findUserByUsername'),
+    findUserByUsernameLower: db
+        .select()
+        .from(users)
+        .where(eq(users.usernameLower, sql.placeholder('usernameLower')))
+        .prepare('findUserByUsernameLower')
 };
 
 class UserWrapper {
@@ -45,7 +65,7 @@ class UserWrapper {
             email,
             password,
             reports: 0,
-            banned: false,
+            banned: false
         });
     }
 }

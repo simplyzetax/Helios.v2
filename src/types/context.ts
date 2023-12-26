@@ -1,8 +1,8 @@
-import type { ApiError } from "../aids/error";
-import type { User } from "../models/user";
-import type { IVersion } from "./vesion";
+import type { ApiError } from '../aids/error';
+import type { User } from '../models/user';
+import type { IVersion } from './vesion';
 
-declare module "hono" {
+declare module 'hono' {
     interface Context {
         sendStatus: (status: number) => Response;
         sendError: (error: ApiError) => Response;

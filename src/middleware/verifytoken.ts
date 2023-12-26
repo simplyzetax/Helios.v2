@@ -1,15 +1,15 @@
-import jwt, { type JwtPayload } from "jsonwebtoken";
-import { createMiddleware } from "hono/factory";
-import type { Context } from "hono";
+import jwt, { type JwtPayload } from 'jsonwebtoken';
+import { createMiddleware } from 'hono/factory';
+import type { Context } from 'hono';
 
-import UserWrapper from "../database/wrappers/user";
-import TokenStore from "../aids/tokenstore";
-import type { User } from "../models/user";
-import { nexus } from "../aids/error";
-import DateUtil from "../aids/date";
+import UserWrapper from '../database/wrappers/user';
+import TokenStore from '../aids/tokenstore';
+import type { User } from '../models/user';
+import { nexus } from '../aids/error';
+import DateUtil from '../aids/date';
 
 const extractTokenFromHeader = (header: string | undefined): string | undefined => {
-    return header?.replace("bearer eg1~", "");
+    return header?.replace('bearer eg1~', '');
 };
 
 const isTokenActive = (token: string): boolean => {
@@ -38,14 +38,14 @@ const getUserFromToken = async (token: string): Promise<User | undefined> => {
 export const verifyToken = createMiddleware(async (c, next) => {
     const token = extractTokenFromHeader(c.req.header('Authorization'));
     if (!token) {
-        console.error("No authorization header");
+        console.error('No authorization header');
         c.nexusError = nexus.authentication.invalidHeader;
         return;
     }
 
     const user = await getUserFromToken(token);
     if (!user) {
-        console.error("User not found");
+        console.error('User not found');
         c.nexusError = nexus.authentication.invalidToken;
         return;
     }

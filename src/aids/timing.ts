@@ -1,7 +1,6 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
 class Timing {
-
     private start: number;
     private date: number;
     private nick: string;
@@ -24,11 +23,10 @@ class Timing {
     public get durationString() {
         return `${this.duration}ms`;
     }
-    
+
     public print() {
         console.log(chalk.gray(`${this.startDateIso}`), chalk.bgBlue(`${this.nick} `), chalk.gray(`${this.durationString}`));
     }
-
 }
 
 export default Timing;
