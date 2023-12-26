@@ -2,7 +2,7 @@ import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
 import * as schema from '../models/user';
 import { config } from '..';
-import Logger from '../aids/logger';
+import Logger from '../utils/logger';
 
 class DB {
     private static instanceCount = 0;

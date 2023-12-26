@@ -1,11 +1,11 @@
 import { type Context, Hono, type Next } from 'hono';
 
-import { loadRoutes } from './aids/routeloader';
-import { Config } from './aids/config';
+import { loadRoutes } from './utils/routeloader';
+import { Config } from './utils/config';
 import DB from './database/client';
 import ResponseEnhancementsMiddleware from './middleware/enhancement';
 import UserAgentParsingMiddleware from './middleware/useragent';
-import Logger from './aids/logger';
+import Logger from './utils/logger';
 
 export const app = new Hono();
 

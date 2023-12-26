@@ -1,7 +1,7 @@
 import { createMiddleware } from 'hono/factory';
 
-import type { IVersion } from '../types/vesion';
-import { nexus } from '../aids/error';
+import type { IVersion } from '../types/version';
+import { nexus } from '../utils/error';
 
 const UserAgentParsingMiddleware = () =>
     createMiddleware(async (c, next) => {

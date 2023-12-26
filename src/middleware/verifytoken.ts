@@ -3,10 +3,10 @@ import { createMiddleware } from 'hono/factory';
 import type { Context } from 'hono';
 
 import UserWrapper from '../database/wrappers/user';
-import TokenStore from '../aids/tokenstore';
+import TokenStore from '../utils/tokenstore';
 import type { User } from '../models/user';
-import { nexus } from '../aids/error';
-import DateUtil from '../aids/date';
+import { nexus } from '../utils/error';
+import DateUtil from '../utils/date';
 
 const extractTokenFromHeader = (header: string | undefined): string | undefined => {
     return header?.replace('bearer eg1~', '');

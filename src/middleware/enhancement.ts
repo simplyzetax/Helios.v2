@@ -1,4 +1,4 @@
-import type { ApiError } from '../aids/error';
+import type { ApiError } from '../utils/error';
 import { createMiddleware } from 'hono/factory';
 
 const ResponseEnhancementsMiddleware = () =>

@@ -1,8 +1,8 @@
 import { app, config } from '..';
 import { getAuthUser, verifyToken } from '../middleware/verifytoken';
-import wrapRoute from '../aids/middlewarewrapper';
-import { nexus } from '../aids/error';
-import { OAuthUtility } from '../aids/clientauth';
+import wrapRoute from '../utils/middlewarewrapper';
+import { nexus } from '../utils/error';
+import { OAuthUtility } from '../utils/clientauth';
 import type { User } from '../models/user';
 const getStatusResponse = (user: User, clientAllowedActions: string[]) => ({
     serviceInstanceId: 'fortnite',

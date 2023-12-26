@@ -1,6 +1,6 @@
-import type { ApiError } from '../aids/error';
+import type { ApiError } from '../utils/error';
 import type { User } from '../models/user';
-import type { IVersion } from './vesion';
+import type { IVersion } from './version';
 
 declare module 'hono' {
     interface Context {
