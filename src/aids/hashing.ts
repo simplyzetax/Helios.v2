@@ -17,7 +17,7 @@ class Hashing {
         return hasher.digest('hex');
     }
 
-    public static md5(data: StringOrBuffer): string {
+    public static md5(data: any): string {
         const hasher = new Bun.CryptoHasher('md5');
         hasher.update(data);
         hasher.digest();
