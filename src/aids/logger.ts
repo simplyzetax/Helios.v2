@@ -71,7 +71,7 @@ class Logger {
         console.log(chalk.bgCyan(` INFO `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static startup = (...args: unknown[]) => {
+    public static startup = (...args: any[]) => {
         console.log(...args.map((arg) => chalk.gray(`${arg}`)));
     };
 }
