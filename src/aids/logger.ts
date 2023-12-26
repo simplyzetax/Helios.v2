@@ -66,12 +66,12 @@ class Logger {
         console.log(chalk.bgYellow(` WARN `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static info = (...args: unknown[]) => {
+    public static info = (...args: any[]) => {
         if (this.getLogLevel() > LogLevelsMap.INFO.level) return;
         console.log(chalk.bgCyan(` INFO `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static startup = (...args: any[]) => {
+    public static startup = (...args: unknown[]) => {
         console.log(...args.map((arg) => chalk.gray(`${arg}`)));
     };
 }
