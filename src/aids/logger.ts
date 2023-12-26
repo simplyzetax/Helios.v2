@@ -51,7 +51,7 @@ class Logger {
         });
 
     // Log methods
-    public static debug = (...args: unknown[]) => {
+    public static debug = (...args: any[]) => {
         if (this.getLogLevel() > LogLevelsMap.DEBUG.level) return;
         console.log(chalk.bgBlue(` DEBUG `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
@@ -66,7 +66,7 @@ class Logger {
         console.log(chalk.bgYellow(` WARN `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };
 
-    public static info = (...args: any[]) => {
+    public static info = (...args: unknown[]) => {
         if (this.getLogLevel() > LogLevelsMap.INFO.level) return;
         console.log(chalk.bgCyan(` INFO `), ...args.map((arg) => chalk.gray(`${arg}`)));
     };

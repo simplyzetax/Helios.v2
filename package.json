@@ -49,7 +49,7 @@
     "lint-staged": {
         "*.{ts}": [
             "pretty-quick --staged",
-            "eslint . --ext .ts --fix",
+            "eslint --fix",
             "git add"
         ]
     }
