@@ -1,12 +1,12 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
-import TokenStore from "../aids/tokenstore";
-import DateUtil from "../aids/date";
-import UserWrapper from "../database/wrappers/user";
-import { nexus } from "../aids/error";
 import { createMiddleware } from "hono/factory";
-import type { TAccessToken } from "../types/tokens";
-import type { User } from "../models/user";
 import type { Context } from "hono";
+
+import UserWrapper from "../database/wrappers/user";
+import TokenStore from "../aids/tokenstore";
+import type { User } from "../models/user";
+import { nexus } from "../aids/error";
+import DateUtil from "../aids/date";
 
 const extractTokenFromHeader = (header: string | undefined): string | undefined => {
     return header?.replace("bearer eg1~", "");

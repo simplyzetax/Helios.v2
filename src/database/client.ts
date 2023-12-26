@@ -2,14 +2,25 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Client } from "pg";
 import * as schema from '../models/user';
 import { config } from "..";
+import Logger from "../aids/logger";
 
 class DB {
 
     private static instanceCount = 0;
 
+    /**
+     * The database connection
+     */
     public connection: Client;
+
+    /**
+     * The database client to run queries with
+     */
     public client: NodePgDatabase<typeof schema>;
-    private connectionUID: string;
+
+    /**
+     * The connection UID. Used for logging purposes
+     */
     id: number;
 
     /**
@@ -21,11 +32,6 @@ class DB {
         });
 
         this.client = drizzle(this.connection, { schema });
-
-        const hasher = new Bun.SHA256();
-        hasher.update(config.databaseUrl);
-        this.connectionUID = hasher.digest('hex');
-
         this.id = DB.instanceCount++;
 
     }
@@ -39,9 +45,9 @@ class DB {
 
         const validate = (await this.connection.query("SELECT 1"));
         if (JSON.stringify(validate).includes('1')) {
-            console.log(`Database connection with id ${this.id} established 🙌`);
+            Logger.startup(`Database connection with id ${this.id} established 🙌`);
         } else {
-            console.error(`Database connection test for id ${this.id} failed 😢`);
+            Logger.error(`Database connection test for id ${this.id} failed 😢`);
             return;
         }
     }
@@ -50,7 +56,7 @@ class DB {
      * Disconnects from the database
      * @returns {Promise<void>}
      */
-    async disconnect() {
+    async disconnect(): Promise<void> {
         await this.connection.end();
     }
 
@@ -58,7 +64,7 @@ class DB {
      * Runs migrations
      * @returns {Promise<void>}
      */
-    async migrate() {
+    async migrate(): Promise<void> {
         //await migrate(this.client, { migrationsFolder: path.join(import.meta.dir, '../../drizzle/migrations/') });
     }
 

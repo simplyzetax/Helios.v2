@@ -3,13 +3,15 @@ import { type Context, Hono, type Next } from "hono";
 import { loadRoutes } from "./aids/routeloader";
 import { Config } from "./aids/config";
 import DB from "./database/client";
-import ResponseEnhancementsMiddleware from "./middleware/extensions";
-import UserAgentMiddleware from "./middleware/useragent";
+import ResponseEnhancementsMiddleware from "./middleware/enhancement";
+import UserAgentParsingMiddleware from "./middleware/useragent";
+import Logger from "./aids/logger";
 
 export const app = new Hono();
 
 app.use('*', ResponseEnhancementsMiddleware());
-app.use('*', UserAgentMiddleware());
+app.use('*', UserAgentParsingMiddleware());
+app.use('*', Logger.logRequest());
 
 await Config.validate()
 export const config = Config.register();
@@ -22,9 +24,11 @@ await loadRoutes("../../src/routes/");
 
 app.use('*', async (c: Context, next: Next) => {
     await next();
-    console.log(c.nexusError ? "Nexus middleware error" : "No nexus middleware error")
+    if(c.nexusError) {
+        Logger.error(c.nexusError.shortenedError, c.nexusError.originatingService);
+    }
 });
 
-console.log("Helios started on port 3000 🚀");
+Logger.startup("Helios started on port 3000 🚀");
 
 export default app;

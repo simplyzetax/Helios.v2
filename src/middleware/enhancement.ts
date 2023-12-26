@@ -1,6 +1,7 @@
 import { type MiddlewareHandler } from "hono";
 import type { ApiError } from "../aids/error";
 import { createMiddleware } from "hono/factory";
+import Logger from "../aids/logger";
 
 const ResponseEnhancementsMiddleware = () => createMiddleware(async (c, next) => {
 
@@ -11,7 +12,7 @@ const ResponseEnhancementsMiddleware = () => createMiddleware(async (c, next) =>
 
     c.sendError = (error: ApiError) => {
         c.status(error.statusCode);
-        return c.json(error);
+        return c.json(error.response);
     };
 
     c.sendIni = (ini: string) => {
@@ -23,8 +24,6 @@ const ResponseEnhancementsMiddleware = () => createMiddleware(async (c, next) =>
         c.status(statusCode);
         return c.body(null);
     };
-
-    console.log(`Enhancement middleware applied to ${c.req.url}`);
     
     c.enhanced = true;
 

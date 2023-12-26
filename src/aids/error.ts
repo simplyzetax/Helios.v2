@@ -12,7 +12,7 @@ export interface ResponseBody {
 
 export class ApiError {
 	statusCode: number;
-	response: ResponseBody;
+	public response: ResponseBody;
 
 	constructor(code: string, message: string, numeric: number, statusCode: number, ...messageVars: string[]) {
 		this.statusCode = statusCode;
@@ -69,6 +69,10 @@ export class ApiError {
 	getMessage(): string {
 		return this.response.messageVars?.reduce((message, msgVar, index) =>
 			message.replace(`{${index}}`, msgVar), this.response.errorMessage) || this.response.errorMessage;
+	}
+
+	shortenedError(): string {
+		return `${this.response.errorCode} - ${this.response.errorMessage}`;
 	}
 }
 export const nexus = {

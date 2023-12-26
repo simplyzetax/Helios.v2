@@ -10,6 +10,6 @@ declare module "hono" {
         user?: User;
         enhanced: boolean;
         nexusError?: ApiError;
-        version: IVersion;
+        memory: IVersion;
     }
 }

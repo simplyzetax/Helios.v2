@@ -1,6 +1,7 @@
 import { db } from "..";
 import { tokens } from "../models/token";
 import type { TAccessToken, TClientToken, TExchangeCode, TRefreshToken } from "../types/tokens";
+import Logger from "./logger";
 
 /**
  * TokenStore
@@ -26,7 +27,7 @@ class TokenStore {
 }
 
 const fetchedTokens = await db.select().from(tokens);
-console.log("Fetched tokens from database 🐢");
+Logger.startup("Fetched tokens from database 🐢");
 for (const token of fetchedTokens) {
 	if (token.type === "access") {
 		TokenStore.activeAccessTokens.push({

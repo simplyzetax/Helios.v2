@@ -1,8 +1,9 @@
 import { createMiddleware } from "hono/factory";
+
 import type { IVersion } from "../types/vesion";
 import { nexus } from "../aids/error";
 
-const UserAgentMiddleware = () => createMiddleware(async (c, next) => {
+const UserAgentParsingMiddleware = () => createMiddleware(async (c, next) => {
     const officialRegex = new RegExp(/(.*)\/(.*)-CL-(\d+)(\s+\((.*?)\))?\s+(\w+)\/(\S*)(\s*\((.*?)\))?/);
 
     const memory: IVersion = {
@@ -26,10 +27,8 @@ const UserAgentMiddleware = () => createMiddleware(async (c, next) => {
         memory.season = Number(build.split(".")[0]);
         memory.build = Number(build);
         memory.lobby = `LobbySeason${memory.season}`;
-    } else {
-        return c.sendError(nexus.internal.invalidUserAgent);
     }
-
+    
     if (buildIDMatch) {
         memory.cl = buildIDMatch[1];
     }
@@ -47,9 +46,7 @@ const UserAgentMiddleware = () => createMiddleware(async (c, next) => {
         memory.lobby = `LobbySeason${memory.season}`;
     }
 
-    c.version = memory;
-
-    console.log(`User agent middleware applied to ${c.req.url}`);
+    c.memory = memory;
 
     await next();
 });
@@ -65,4 +62,4 @@ function getSeasonFromCL(cl: string): number {
     }
 }
 
-export default UserAgentMiddleware;
+export default UserAgentParsingMiddleware;

@@ -1,11 +1,16 @@
 import { z } from "zod";
 import ini from 'ini';
 import path from "path";
+import Logger from "./logger";
 
 export const configSchema = z.object({
     JWT_SECRET: z.string(),
     matchmakerUrl: z.string(),
     databaseUrl: z.string(),
+    logging: z.object({
+        logLevel: z.string(),
+        writeToFile: z.boolean(),
+    }),
     dates: z.object({
         seasonStart: z.string(),
         seasonEnd: z.string(),
@@ -47,15 +52,16 @@ export class Config {
     public static async validate(): Promise<z.infer<typeof configSchema>> {
 
         const configFile = ini.parse(await Bun.file(path.join(import.meta.dir, "../../config.ini")).text());
-
+    
         // Flatten the config object
         const flattenedConfig: any = {
             ...configFile.JWT,
             ...configFile.matchmaker,
             ...configFile.database,
+            logging: configFile.logging,
             dates: configFile.dates
         };
-
+    
         const parsedConfig: z.infer<typeof configSchema> = configSchema.parse(flattenedConfig);
 
         for (const [key, value] of Object.entries(parsedConfig)) {
@@ -65,12 +71,10 @@ export class Config {
                         parsedConfig.dates[dateKey as keyof z.infer<typeof configSchema>['dates']] = magicKeywords[dateValue];
                     }
                 }
-            } else if (typeof value === 'string' && magicKeywords[value]) {
-                parsedConfig[key as keyof Omit<z.infer<typeof configSchema>, 'dates'>] = magicKeywords[value];
+            } else if (key !== 'logging' && typeof value === 'string' && magicKeywords[value]) {
+                parsedConfig[key as keyof Omit<z.infer<typeof configSchema>, 'dates' | 'logging'>] = magicKeywords[value];
             }
         }
-
-        console.log("Config validated 🪐");
 
         this.validatedConfig = parsedConfig;
 
@@ -82,9 +86,20 @@ export class Config {
      * @returns {z.infer<typeof configSchema>}
      */
     public static register(): z.infer<typeof configSchema> {
-        console.log("Config registered 👌");
+        Logger.startup("Config registered 👌");
         this.config = this.validatedConfig;
         return this.config;
+    }
+
+    public static configLoaded(): Promise<void> {
+        return new Promise((resolve) => {
+            const intervalId = setInterval(() => {
+                if (this.config) {
+                    clearInterval(intervalId);
+                    resolve();
+                }
+            }, 100);
+        });
     }
 
 }
