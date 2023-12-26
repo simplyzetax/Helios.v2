@@ -4,32 +4,46 @@ import DateUtil from "../aids/date";
 import UserWrapper from "../database/wrappers/user";
 import { nexus } from "../aids/error";
 import { createMiddleware } from "hono/factory";
+import type { TAccessToken } from "../types/tokens";
+import type { User } from "../models/user";
+import type { Context } from "hono";
+
+const extractTokenFromHeader = (header: string | undefined): string | undefined => {
+    return header?.replace("bearer eg1~", "");
+};
+
+const isTokenActive = (token: string): boolean => {
+    return !!TokenStore.activeAccessTokens.find((i) => i.token === `eg1~${token}`);
+};
+
+const isTokenExpired = (decodedToken: any): boolean => {
+    const expiryDate = DateUtil.dateAddTime(new Date(decodedToken.creation_date), decodedToken.hours_expire).getTime();
+    return expiryDate <= new Date().getTime();
+};
+
+const getUserFromToken = async (token: string): Promise<User | undefined> => {
+    const decodedToken = jwt.decode(token) as JwtPayload;
+    if (!decodedToken || !decodedToken.subject || !isTokenActive(token)) {
+        return undefined;
+    }
+
+    if (isTokenExpired(decodedToken)) {
+        return undefined;
+    }
+
+    let user = await UserWrapper.findUserById(decodedToken.subject);
+    return user;
+};
 
 export const verifyToken = createMiddleware(async (c, next) => {
-
-    const authHeader = c.req.header('Authorization');
-    if (!authHeader) {
+    const token = extractTokenFromHeader(c.req.header('Authorization'));
+    if (!token) {
         console.error("No authorization header");
         c.nexusError = nexus.authentication.invalidHeader;
         return;
     }
 
-    const token = authHeader.replace("bearer eg1~", "");
-    const decodedToken = jwt.decode(token) as JwtPayload;
-
-    if (!decodedToken || !decodedToken.subject || !isTokenActive(token)) {
-        console.error("Token is not active");
-        c.nexusError = nexus.authentication.invalidToken;
-        return;
-    }
-
-    if (isTokenExpired(decodedToken)) {
-        console.error("Expired token");
-        c.nexusError = nexus.authentication.invalidToken;
-        return;
-    }
-
-    const user = await UserWrapper.findUserById(decodedToken.subject);
+    const user = await getUserFromToken(token);
     if (!user) {
         console.error("User not found");
         c.nexusError = nexus.authentication.invalidToken;
@@ -37,15 +51,14 @@ export const verifyToken = createMiddleware(async (c, next) => {
     }
 
     c.user = user;
-
     await next();
 });
 
-function isTokenActive(token: string): boolean {
-    return !!TokenStore.activeAccessTokens.find((i) => i.token === `eg1~${token}`);
-}
+export const getAuthUser = async (c: Context): Promise<User | undefined> => {
+    const token = extractTokenFromHeader(c.req.header('Authorization'));
+    if (!token) {
+        return undefined;
+    }
 
-function isTokenExpired(decodedToken: any): boolean {
-    const expiryDate = DateUtil.dateAddTime(new Date(decodedToken.creation_date), decodedToken.hours_expire).getTime();
-    return expiryDate <= new Date().getTime();
-}
+    return getUserFromToken(token);
+};

@@ -1,5 +1,6 @@
 import type { ApiError } from "../aids/error";
 import type { User } from "../models/user";
+import type { IVersion } from "./vesion";
 
 declare module "hono" {
     interface Context {
@@ -9,5 +10,6 @@ declare module "hono" {
         user?: User;
         enhanced: boolean;
         nexusError?: ApiError;
+        version: IVersion;
     }
 }

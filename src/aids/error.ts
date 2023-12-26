@@ -171,7 +171,7 @@ export const nexus = {
 	},
 	internal: {
 		get validationFailed() { return new ApiError('errors.com.nexus.internal.validationFailed', 'Validation Failed. Invalid fields were {0}', 1040, 400) },
-		get invalidUserAgent() { return new ApiError('errors.com.nexus.internal.invalidUserAgent', 'The user-agent header you provided does not mach a unreal engine formated user-agent', 16183, 400) },
+		get invalidUserAgent() { return new ApiError('errors.com.nexus.internal.invalidUserAgent', 'The user-agent header you provided does not match a unreal engine formated user-agent', 16183, 400) },
 		get serverError() { return new ApiError('errors.com.nexus.internal.serverError', 'Sorry an error occurred and we were unable to resolve it.', 1000, 500) },
 		get jsonParsingFailed() { return new ApiError('errors.com.nexus.internal.jsonParsingFailed', 'Json parse failed.', 1020, 400) },
 		get requestTimedOut() { return new ApiError('errors.com.nexus.internal.requestTimedOut', "Request timed out.", 1001, 408) },

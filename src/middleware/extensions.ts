@@ -6,7 +6,7 @@ const ResponseEnhancementsMiddleware = () => createMiddleware(async (c, next) =>
 
     if (c.enhanced) {
         console.log(`Enhancement middleware already applied to ${c.req.url}`);
-        return await next();
+        await next();
     }
 
     c.sendError = (error: ApiError) => {

@@ -99,6 +99,8 @@ export namespace JwtHelper {
     }
 
     export function isJwtPayload(token: JwtPayload): JwtPayload {
+        if(typeof token !== 'object' || !token) throw new Error('Invalid JwtPayload');
+        console.log(token);
         if (typeof token.creationDate !== 'string' || typeof token.hoursExpire !== 'number') {
             throw new Error('Invalid JwtPayload');
         }

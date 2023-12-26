@@ -1,3 +1,5 @@
+import { db } from "..";
+import { tokens } from "../models/token";
 import type { TAccessToken, TClientToken, TExchangeCode, TRefreshToken } from "../types/tokens";
 
 /**
@@ -21,6 +23,22 @@ class TokenStore {
         TokenStore.activeClientTokens = [];
         TokenStore.exchangeCodes = [];
     }
+}
+
+const fetchedTokens = await db.select().from(tokens);
+console.log("Fetched tokens from database 🐢");
+for (const token of fetchedTokens) {
+	if (token.type === "access") {
+		TokenStore.activeAccessTokens.push({
+			accountId: token.accountId!,
+			token: `${token.token}`,
+		});
+	} else if (token.type === "refresh") {
+		TokenStore.activeRefreshTokens.push({
+			accountId: token.accountId!,
+			token: `${token.token}`,
+		});
+	}
 }
 
 export default TokenStore;
