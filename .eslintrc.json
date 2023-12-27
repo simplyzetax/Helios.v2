@@ -14,8 +14,7 @@
         "no-dupe-args": "error",
         "no-dupe-keys": "error",
         "require-await": "error",
-        "no-fallthrough": 2,
-        "camelcase": 1
+        "no-fallthrough": 2
     },
     "settings": {
         "import/resolver": {

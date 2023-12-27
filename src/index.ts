@@ -25,7 +25,7 @@ await loadRoutes('../../src/routes/');
 app.use('*', async (c: Context, next: Next) => {
     await next();
     if (c.nexusError) {
-        Logger.error(c.nexusError.shortenedError, c.nexusError.originatingService);
+        Logger.error(c.nexusError.shortenedError(), c.nexusError.statusCode);
     }
 });
 

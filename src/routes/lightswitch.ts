@@ -2,8 +2,8 @@ import { app, config } from '..';
 import { getAuthUser, verifyToken } from '../middleware/verifytoken';
 import wrapRoute from '../utils/middlewarewrapper';
 import { nexus } from '../utils/error';
-import { OAuthUtility } from '../utils/clientauth';
 import type { User } from '../models/user';
+import { validateClient } from '../utils/clientauth';
 const getStatusResponse = (user: User, clientAllowedActions: string[]) => ({
     serviceInstanceId: 'fortnite',
     status: 'UP',
@@ -21,7 +21,7 @@ const getStatusResponse = (user: User, clientAllowedActions: string[]) => ({
 
 app.get('/lightswitch/api/service/Fortnite/status', async (c) => {
     const user = await getAuthUser(c);
-    if (!user && !OAuthUtility.validateClient(c)) return c.sendError(nexus.authentication.invalidHeader);
+    if (!user && !validateClient(c)) return c.sendError(nexus.authentication.invalidHeader);
     let clientAllowedActions = user?.banned ? ['NONE'] : ['PLAY', 'DOWNLOAD'] ?? ['NONE'];
     if (!user) clientAllowedActions = ['NONE'];
     return c.json(getStatusResponse(user!, clientAllowedActions));
