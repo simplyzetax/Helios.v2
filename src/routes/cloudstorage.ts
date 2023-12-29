@@ -6,7 +6,7 @@ import app from "..";
 import Hashing from "../utils/hashing";
 import UUID from "../utils/uuid";
 import { nexus } from "../utils/error";
-import wrapRoute from "../utils/middlewarewrapper";
+import withMiddleware from "../utils/middlewarewrapper";
 import { verifyToken, verifyTokenWithUser } from "../middleware/verifytoken";
 import { hotfixOverrides } from "./overrides";
 import type { IReplaceableHotfix } from "../types/overrides";
@@ -24,7 +24,7 @@ const s3Client = new S3Client({
 
 const cloudFiles: unknown[] = [];
 
-app.get("/fortnite/api/cloudstorage/system", wrapRoute([verifyToken], async (c) => {
+app.get("/fortnite/api/cloudstorage/system", withMiddleware([verifyToken], async (c) => {
     if (cloudFiles.length > 0 && hotfixOverrides.length === 0) {
         return c.json(cloudFiles);
     }
@@ -62,7 +62,7 @@ app.get("/fortnite/api/cloudstorage/system", wrapRoute([verifyToken], async (c) 
     return c.json(cloudFiles);
 }));
 
-app.get("/fortnite/api/cloudstorage/system/:file", wrapRoute([verifyToken], async (c) => {
+app.get("/fortnite/api/cloudstorage/system/:file", withMiddleware([verifyToken], async (c) => {
     const requestedFile = c.req.param("file");
 
     try {
@@ -80,7 +80,7 @@ app.get("/fortnite/api/cloudstorage/system/:file", wrapRoute([verifyToken], asyn
     }
 }));
 
-app.get("/fortnite/api/cloudstorage/user/:accountId", wrapRoute([verifyTokenWithUser],async (c) => {
+app.get("/fortnite/api/cloudstorage/user/:accountId", withMiddleware([verifyTokenWithUser],async (c) => {
     let content, uploaded;
 
     try {
@@ -111,7 +111,7 @@ app.get("/fortnite/api/cloudstorage/user/:accountId", wrapRoute([verifyTokenWith
 const FILE_NAME = "clientsettings.sav";
 const BUCKET_NAME = "nexus";
 
-app.get("/fortnite/api/cloudstorage/user/:accountId/:file", wrapRoute([verifyTokenWithUser], async (c) => {
+app.get("/fortnite/api/cloudstorage/user/:accountId/:file", withMiddleware([verifyTokenWithUser], async (c) => {
     if (!c.user) return c.sendError(nexus.authentication.authenticationFailed.variable(["token"]));
 
     const filename = c.req.param("file").toLowerCase();
@@ -137,7 +137,7 @@ app.get("/fortnite/api/cloudstorage/user/:accountId/:file", wrapRoute([verifyTok
     }
 }));
 
-app.put("/fortnite/api/cloudstorage/user/:accountId/:file", wrapRoute([verifyTokenWithUser], async (c) => {
+app.put("/fortnite/api/cloudstorage/user/:accountId/:file", withMiddleware([verifyTokenWithUser], async (c) => {
     if (!c.user) return c.sendError(nexus.authentication.authenticationFailed.variable(["token"]));
 
     const filename = c.req.param("file").toLowerCase();

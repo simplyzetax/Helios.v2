@@ -2,7 +2,7 @@ import type { Context, Handler, Next } from 'hono';
 
 type Middleware = (c: Context, next: Next) => Promise<Response | void> | void;
 
-function wrapRoute(middlewares: Middleware[], handler: Handler): Handler {
+function withMiddleware(middlewares: Middleware[], handler: Handler): Handler {
     return async (c: Context, next: Next) => {
         try {
             for (const middleware of middlewares) {
@@ -24,4 +24,4 @@ function wrapRoute(middlewares: Middleware[], handler: Handler): Handler {
     };
 }
 
-export default wrapRoute;
+export default withMiddleware;

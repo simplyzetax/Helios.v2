@@ -14,7 +14,7 @@ import UUID from "../utils/uuid";
 import { tokens } from "../models/token";
 import { eq } from "drizzle-orm";
 import { verifyTokenWithUser } from "../middleware/verifytoken";
-import wrapRoute from "../utils/middlewarewrapper";
+import withMiddleware from "../utils/middlewarewrapper";
 
 //export const appt = app.use("*", authMiddleware());
 
@@ -238,7 +238,7 @@ app.post("/account/api/oauth/launcher/credentials", async (c) => {
     });
 });
 
-app.get("/account/api/oauth/verify", wrapRoute([verifyTokenWithUser], (c) => {
+app.get("/account/api/oauth/verify", withMiddleware([verifyTokenWithUser], (c) => {
     const user = c.user!;
     const auth = c.req.header("authorization");
     if (!auth) return c.sendError(nexus.authentication.invalidHeader);
