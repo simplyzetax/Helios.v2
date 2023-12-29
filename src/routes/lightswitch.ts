@@ -1,9 +1,9 @@
 import { app, config } from '..';
-import { getAuthUser, verifyToken } from '../middleware/verifytoken';
-import wrapRoute from '../utils/middlewarewrapper';
+import { getAuthUser } from '../middleware/verifytoken';
 import { nexus } from '../utils/error';
 import type { User } from '../models/user';
 import { validateClient } from '../utils/clientauth';
+
 const getStatusResponse = (user: User, clientAllowedActions: string[]) => ({
     serviceInstanceId: 'fortnite',
     status: 'UP',
@@ -27,14 +27,11 @@ app.get('/lightswitch/api/service/Fortnite/status', async (c) => {
     return c.json(getStatusResponse(user!, clientAllowedActions));
 });
 
-app.get(
-    '/lightswitch/api/service/bulk/status',
-    wrapRoute([verifyToken], async (c) => {
-        const user = await getAuthUser(c);
-        const clientAllowedActions = user?.banned ? ['NONE'] : ['PLAY', 'DOWNLOAD'];
-        return c.json([getStatusResponse(user!, clientAllowedActions)]);
-    })
-);
+app.get('/lightswitch/api/service/bulk/status', async (c) => {
+    const user = await getAuthUser(c);
+    const clientAllowedActions = user?.banned ? ['NONE'] : ['PLAY', 'DOWNLOAD'];
+    return c.json([getStatusResponse(user!, clientAllowedActions)]);
+})
 
 app.get('/fortnite/api/version', (c) =>
     c.json({

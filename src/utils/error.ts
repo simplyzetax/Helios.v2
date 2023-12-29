@@ -102,6 +102,9 @@ export const nexus = {
         get unknownSession() {
             return new ApiError('errors.com.nexus.authentication.unknownSession', 'Sorry we could not find the auth session {0}', 18051, 404);
         },
+        get usedClientToken() { 
+            return new ApiError('errors.com.nexus.authentication.wrongTokenType', 'This route requires quthentication via user access tokens, but you are using a client token', 18052, 401);
+        },
         oauth: {
             get invalidExternalAuthType() {
                 return new ApiError('errors.com.nexus.authentication.oauth.invalidExternalAuthType', 'The external auth type {0} you used is not supported by the server.', 1016, 400);

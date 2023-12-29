@@ -6,9 +6,9 @@ function wrapRoute(middlewares: Middleware[], handler: Handler): Handler {
     return async (c: Context, next: Next) => {
         try {
             for (const middleware of middlewares) {
+                console.log(`Running middleware ${middleware.name}`);
                 await middleware(c, next);
             }
-            if (c.nexusError) return c.sendError(c.nexusError);
             return handler(c, next);
         } catch (error: unknown) {
             if (error instanceof Error) {

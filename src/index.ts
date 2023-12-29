@@ -6,6 +6,7 @@ import DB from './database/client';
 import ResponseEnhancementsMiddleware from './middleware/enhancement';
 import UserAgentParsingMiddleware from './middleware/useragent';
 import Logger from './utils/logger';
+import { nexus } from './utils/error';
 
 export const app = new Hono();
 
@@ -30,5 +31,7 @@ app.use('*', async (c: Context, next: Next) => {
 });
 
 Logger.startup('Helios started on port 3000 🚀');
+
+app.notFound((c) => c.sendError(nexus.basic.notFound));
 
 export default app;

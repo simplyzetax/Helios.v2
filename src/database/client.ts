@@ -39,14 +39,19 @@ class DB {
      * @returns {Promise<void>}
      */
     async connect(): Promise<void> {
-        await this.connection.connect();
+        try {
+            await this.connection.connect();
 
-        const validate = await this.connection.query('SELECT 1');
-        if (JSON.stringify(validate).includes('1')) {
-            Logger.startup(`Database connection with id ${this.id} established 🙌`);
-        } else {
+            const validate = await this.connection.query('SELECT 1');
+            if (JSON.stringify(validate).includes('1')) {
+                Logger.startup(`Database connection with id ${this.id} established 🙌`);
+            } else {
+                Logger.error(`Database connection test for id ${this.id} failed 😢`);
+                return;
+            }
+        } catch (err) {
+            Logger.error(err);
             Logger.error(`Database connection test for id ${this.id} failed 😢`);
-            return;
         }
     }
 

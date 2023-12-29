@@ -1,5 +1,5 @@
 import url from "url";
-import app, { db } from "..";
+import { app, db } from "..";
 import { nexus } from "../utils/error";
 import Encoding from "../utils/encoding";
 import { isValidClient } from "../utils/clientauth";
@@ -13,7 +13,7 @@ import type { TAccessToken, TRefreshToken } from "../types/tokens";
 import UUID from "../utils/uuid";
 import { tokens } from "../models/token";
 import { eq } from "drizzle-orm";
-import { verifyToken } from "../middleware/verifytoken";
+import { verifyTokenWithUser } from "../middleware/verifytoken";
 import wrapRoute from "../utils/middlewarewrapper";
 
 //export const appt = app.use("*", authMiddleware());
@@ -150,7 +150,7 @@ app.post("/account/api/oauth/token", async (c) => {
         }
         default: {
             return c.sendError(
-                nexus.authentication.oauth.grantNotImplemented.variable([requestBody.grant_type]),
+                nexus.authentication.oauth.grantNotImplemented.variable([requestBody.grant_type ?? "unknown"]),
             );
         }
     }
@@ -238,7 +238,7 @@ app.post("/account/api/oauth/launcher/credentials", async (c) => {
     });
 });
 
-app.get("/account/api/oauth/verify", wrapRoute([verifyToken], (c) => {
+app.get("/account/api/oauth/verify", wrapRoute([verifyTokenWithUser], (c) => {
     const user = c.user!;
     const auth = c.req.header("authorization");
     if (!auth) return c.sendError(nexus.authentication.invalidHeader);
