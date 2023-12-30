@@ -10,6 +10,7 @@ import withMiddleware from "../utils/middlewarewrapper";
 import { verifyToken, verifyTokenWithUser } from "../middleware/verifytoken";
 import { hotfixOverrides } from "./overrides";
 import type { IReplaceableHotfix } from "../types/overrides";
+import Logger from "../utils/logger";
 
 const S3_CREDENTIALS = {
     accessKeyId: "37ddc36f81fbb183628ae5beb01acf59",
@@ -23,6 +24,11 @@ const s3Client = new S3Client({
 });
 
 const cloudFiles: unknown[] = [];
+
+while(!verifyToken) {
+    Logger.debug("Waiting for verifyToken to be defined...");
+    setTimeout(() => {}, 100);
+}
 
 app.get("/fortnite/api/cloudstorage/system", withMiddleware([verifyToken], async (c) => {
     if (cloudFiles.length > 0 && hotfixOverrides.length === 0) {
